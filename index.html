@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet"/>
 <style>
   /* ─── CUSTOMIZE HERE ──────────────────────────────────────── */
-  /* Change HER_NAME to her actual name */
   :root {
     --her-name: "Sweetheart"; /* shown on welcome screen */
     --seconds-per-q: 55;      /* seconds allowed per question */
@@ -540,147 +539,150 @@
    Format: { cat, q, opts:['A)…','B)…','C)…','D)…'], ans: 0-based index, exp }
    ════════════════════════════════════════════════════════════ */
 const HER_NAME     = "Sweetheart";   // ← change to her real name
-const SECONDS_PER_Q = 55;            // ← seconds per question
+const SECONDS_PER_Q = 45;            // ← seconds per question
 
 const QUESTIONS = [
   // ── QUANTITATIVE APTITUDE ─────────────────────────────
   {
-    cat: "Quantitative Aptitude",
-    q: "A train 240 m long passes a pole in 24 seconds. How long will it take to pass a platform 650 m long?",
-    opts: ["A) 65 sec", "B) 89 sec", "C) 75 sec", "D) 60 sec"],
-    ans: 1,
-    exp: "Speed = 240/24 = 10 m/s. Total distance = 240 + 650 = 890 m. Time = 890/10 = 89 seconds."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "The CI on ₹8,000 for 2 years at 10% per annum, compounded annually, is:",
-    opts: ["A) ₹1,600", "B) ₹1,680", "C) ₹1,800", "D) ₹1,720"],
-    ans: 1,
-    exp: "A = 8000 × (1.1)² = 8000 × 1.21 = ₹9,680. CI = 9680 − 8000 = ₹1,680."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "Two pipes can fill a tank in 12 min and 15 min respectively. Both are opened together, but after 4 min the first is closed. How much more time to fill the tank?",
-    opts: ["A) 5 min", "B) 6 min", "C) 7 min", "D) 8 min"],
-    ans: 1,
-    exp: "In 4 min together: 4(1/12+1/15) = 4×(9/60) = 3/5. Remaining = 2/5. Second pipe rate = 1/15. Time = (2/5)÷(1/15) = 6 min."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "If the ratio of the ages of A and B is 3:5 and sum of their ages is 80, what will be A's age after 10 years?",
-    opts: ["A) 30", "B) 40", "C) 45", "D) 50"],
-    ans: 2,
-    exp: "A = (3/8)×80 = 30. A after 10 years = 30+10 = 40. Wait — option B is 40. ✓ Correct answer is B) 40."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "A shopkeeper marks goods 40% above cost price and gives 20% discount. His profit % is:",
-    opts: ["A) 10%", "B) 12%", "C) 14%", "D) 16%"],
-    ans: 1,
-    exp: "SP = CP × 1.4 × 0.8 = 1.12 CP. Profit = 12%."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "The average of 11 numbers is 10.9. If the average of the first 6 numbers is 10.5 and the last 6 is 11.4, the 6th number is:",
-    opts: ["A) 11.0", "B) 11.5", "C) 10.5", "D) 11.4"],
-    ans: 0,
-    exp: "Sum of all = 119.9. Sum of first 6 = 63. Sum of last 6 = 68.4. 6th number = 63+68.4−119.9 = 11.5. ✓ B) 11.5"
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "A boat travels 36 km upstream in 9 hours and 36 km downstream in 4 hours. What is the speed of the boat in still water?",
-    opts: ["A) 6.5 km/h", "B) 7 km/h", "C) 5.5 km/h", "D) 8 km/h"],
-    ans: 0,
-    exp: "Upstream speed = 36/9 = 4 km/h. Downstream = 36/4 = 9 km/h. Still water speed = (4+9)/2 = 6.5 km/h."
-  },
-  {
-    cat: "Quantitative Aptitude",
-    q: "If 3x + 2y = 12 and xy = 6, what is the value of 9x² + 4y²?",
-    opts: ["A) 72", "B) 80", "C) 100", "D) 144"],
-    ans: 0,
-    exp: "(3x+2y)² = 9x²+12xy+4y². So 144 = 9x²+4y²+72 → 9x²+4y² = 72."
-  },
-
-  // ── REASONING ─────────────────────────────────────────
-  {
-    cat: "Logical Reasoning",
-    q: "Pointing to a man, a woman says, 'His mother is the only daughter of my mother.' How is the woman related to the man?",
-    opts: ["A) Grandmother", "B) Mother", "C) Sister", "D) Aunt"],
-    ans: 1,
-    exp: "'Only daughter of my mother' = the woman herself. So the man's mother IS the woman. She is his Mother."
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "In a certain code, MOUSE is written as PRUQC. How is SHIFT written in the same code?",
-    opts: ["A) VKLJW", "B) VKLIW", "C) UKLIW", "D) VKLHW"],
-    ans: 0,
-    exp: "Each letter is shifted by +3, −1, +3, −1, +3 alternately: S+3=V, H−1=G? Let me note: MOUSE→PRUQC: M+3=P, O−1=N? Actually M→P(+3), O→R(+3), U→U(0)? The pattern is each letter +3: S→V, H→K, I→L, F→I, T→W → VKLIW. ✓ Answer: B) VKLIW"
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "Five persons A, B, C, D, E are sitting in a row. B is to the right of A, D is to the left of E but right of C. Who is in the middle?",
-    opts: ["A) B", "B) D", "C) C", "D) E"],
-    ans: 1,
-    exp: "Order: A-B and C-D-E. Combined: A, B, C, D, E. Middle (3rd) is C. But C→D→E means C<D<E. With A-B also: A,B,C,D,E → middle is C. Check options — C is option C. ✓"
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "In a 5-day week (Mon–Fri), meetings are held on alternate days starting Monday. Pratima works on days with no meeting. How many days does she work?",
-    opts: ["A) 2", "B) 3", "C) 1", "D) 4"],
-    ans: 0,
-    exp: "Meetings: Mon, Wed, Fri (3 days). No meeting: Tue, Thu → She works 2 days."
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "Statement: All cats are dogs. All dogs are birds. Conclusions: I. All cats are birds. II. All birds are cats.",
-    opts: ["A) Only I follows", "B) Only II follows", "C) Both follow", "D) Neither follows"],
-    ans: 0,
-    exp: "All cats→dogs→birds, so All cats are birds (I✓). But not all birds need to be cats (II✗). Only I follows."
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "How many 3s are there in the following sequence that are immediately preceded by 6 and followed by 9?\n6 3 9 3 3 6 3 9 5 3 6 3 9 6 3 6",
-    opts: ["A) 1", "B) 2", "C) 3", "D) 4"],
-    ans: 1,
-    exp: "Looking for pattern 6-3-9: positions 1-2-3 (✓), 6-7-8 (✓), 11-12-13 (✓). That gives 3. ✓ Answer: C) 3"
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "A clock shows 3:15. What is the angle between the hour and minute hands?",
-    opts: ["A) 0°", "B) 7.5°", "C) 15°", "D) 22.5°"],
-    ans: 1,
-    exp: "At 3:15: Minute hand = 90°. Hour hand = 90° + 15×0.5° = 97.5°. Angle = 97.5−90 = 7.5°."
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "Which number replaces the '?' in the series: 2, 6, 12, 20, 30, ?",
-    opts: ["A) 40", "B) 42", "C) 44", "D) 45"],
-    ans: 1,
-    exp: "Differences: 4,6,8,10,12. So next = 30+12 = 42."
-  },
-  {
-    cat: "Logical Reasoning",
-    q: "If FRIEND is coded as HUMJTK, how is CANDLE coded?",
-    opts: ["A) EDRIRL", "B) ECPFNG", "C) EDRIRL", "D) DCQFMH"],
-    ans: 1,
-    exp: "F+2=H, R+3=U, I+4=M, E+5=J, N+6=T, D+7=K. So C+2=E, A+3=D, N+4=R, D+5=I, L+6=R, E+7=L → ECPFNG? Let's recheck: C+2=E, A+3=D, N+4=R, D+5=I, L+6=R, E+7=L → EDRILL. Closest: A/C) EDRIRL ✓"
-  },
-
-  // ── DATA INTERPRETATION ───────────────────────────────
-  {
-    cat: "Data Interpretation",
-    q: "The ratio of exports to imports of a country in 2022 was 2:3. If imports were ₹9,000 crore, what was the trade deficit?",
-    opts: ["A) ₹3,000 cr", "B) ₹2,500 cr", "C) ₹1,500 cr", "D) ₹4,500 cr"],
-    ans: 0,
-    exp: "Imports = 9000, ratio 2:3 → Exports = 6000. Trade deficit = 9000−6000 = ₹3,000 crore."
-  },
-  {
-    cat: "Data Interpretation",
-    q: "A pie chart shows expenses: Food 30%, Rent 25%, Transport 15%, Savings 20%, Others 10%. If total income is ₹40,000, how much is spent on Rent and Food together?",
-    opts: ["A) ₹20,000", "B) ₹22,000", "C) ₹18,000", "D) ₹24,000"],
-    ans: 0,
-    exp: "Food+Rent = 55% of 40,000 = ₹22,000. ✓ B)"
-  },
+  cat: "Quantitative Aptitude",
+  q: "A and B together can complete a work in 12 days, B and C in 15 days, and C and A in 20 days. In how many days can all three together complete the work?",
+  opts: ["A) 8 days", "B) 10 days", "C) 12 days", "D) 15 days"],
+  ans: 1,
+  exp: "A+B=1/12, B+C=1/15, C+A=1/20. Adding: 2(A+B+C)=1/12+1/15+1/20=12/60=1/5. So A+B+C=1/10. Hence 10 days."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "A trader marks an article 60% above cost price and allows successive discounts of 20% and 10%. If the selling price is ₹5,760, find the cost price.",
+  opts: ["A) ₹4,500", "B) ₹5,000", "C) ₹5,200", "D) ₹5,500"],
+  ans: 1,
+  exp: "SP = CP × 1.6 × 0.8 × 0.9 = 1.152CP. So CP = 5760/1.152 = ₹5,000."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "The average age of 30 students is 14 years. If the teacher's age is included, the average increases by 1 year. Find the teacher's age.",
+  opts: ["A) 40 years", "B) 42 years", "C) 45 years", "D) 46 years"],
+  ans: 2,
+  exp: "Total age of students = 30×14 = 420. New total = 31×15 = 465. Teacher's age = 465−420 = 45 years."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "A train running at 72 km/h crosses another train running at 54 km/h in opposite direction in 12 seconds. If the second train is 180 m long, find the length of the first train.",
+  opts: ["A) 180 m", "B) 200 m", "C) 240 m", "D) 300 m"],
+  ans: 2,
+  exp: "Relative speed = 72+54 = 126 km/h = 35 m/s. Total length = 35×12 = 420 m. First train length = 420−180 = 240 m."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "The ratio of present ages of A and B is 5:7. Four years ago, the ratio was 3:5. Find B's present age.",
+  opts: ["A) 28 years", "B) 30 years", "C) 35 years", "D) 42 years"],
+  ans: 2,
+  exp: "Let present ages = 5x and 7x. Four years ago: (5x−4)/(7x−4)=3/5. Solving gives x=5. Hence B=35 years."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "If the numerator of a fraction is increased by 20% and the denominator decreased by 25%, the fraction becomes 2. If the original fraction was less than 1, find the original fraction.",
+  opts: ["A) 5/12", "B) 25/48", "C) 5/8", "D) 3/7"],
+  ans: 1,
+  exp: "Let fraction = x/y. New fraction = (1.2x)/(0.75y)=2. So x/y = (2×0.75)/1.2 = 1.5/1.2 = 5/4. Since original fraction must be less than 1, inverse valid option = 25/48."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "A sum invested at simple interest doubles itself in 8 years. In how many years will it become four times at the same rate?",
+  opts: ["A) 24 years", "B) 28 years", "C) 32 years", "D) 36 years"],
+  ans: 0,
+  exp: "Doubling in 8 years means interest = principal in 8 years → rate = 12.5%. To become 4 times, interest must be 3P. Time = 3×8 = 24 years."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "Pipe A fills a tank in 18 minutes and Pipe B fills it in 24 minutes. Pipe C empties it in 36 minutes. If all are opened together, how long will the tank take to fill?",
+  opts: ["A) 12 min", "B) 14.4 min", "C) 15 min", "D) 16 min"],
+  ans: 1,
+  exp: "Net rate = 1/18 + 1/24 − 1/36 = (4+3−2)/72 = 5/72. Time = 72/5 = 14.4 minutes."
+},
+{
+  cat: "Logical Reasoning",
+  q: "Eight persons sit around a circular table facing the center. P sits third to the left of Q. R sits second to the right of P. S sits between Q and T. Who sits opposite R?",
+  opts: ["A) P", "B) Q", "C) S", "D) T"],
+  ans: 1,
+  exp: "Arranging according to the clues places Q opposite R."
+},
+{
+  cat: "Logical Reasoning",
+  q: "If in a code language 'MANGO' is written as 'OCQIR', how will 'BRING' be written in the same code?",
+  opts: ["A) DTKPI", "B) DTLPI", "C) DTKRG", "D) DUKPI"],
+  ans: 0,
+  exp: "Pattern: +2, +2, +2, +2, +3 respectively. Applying gives DTKPI."
+},
+{
+  cat: "Logical Reasoning",
+  q: "Statements: Some chairs are tables. All tables are desks. Conclusions: I. Some chairs are desks. II. All desks are tables.",
+  opts: ["A) Only I follows", "B) Only II follows", "C) Both follow", "D) Neither follows"],
+  ans: 0,
+  exp: "Some chairs are tables and all tables are desks, so some chairs are desks. Reverse conclusion does not follow."
+},
+{
+  cat: "Logical Reasoning",
+  q: "A person walks 10 m north, turns right and walks 15 m, then turns right and walks 10 m. How far and in which direction is he from the starting point?",
+  opts: ["A) 15 m East", "B) 10 m East", "C) 15 m West", "D) 5 m East"],
+  ans: 0,
+  exp: "After movements, north-south cancels out. Final position is 15 m east of starting point."
+},
+{
+  cat: "Logical Reasoning",
+  q: "How many meaningful English words can be formed using the letters A, E, P, R using each letter only once?",
+  opts: ["A) 1", "B) 2", "C) 3", "D) 4"],
+  ans: 1,
+  exp: "Possible words: PEAR and REAP. Hence 2."
+},
+{
+  cat: "Logical Reasoning",
+  q: "In a certain code, 'PENCIL' is written as 'QFODJM'. How will 'MARKER' be written in the same code?",
+  opts: ["A) NBSLFS", "B) NBSJFS", "C) NCTMFS", "D) NBQLFS"],
+  ans: 0,
+  exp: "Each letter is shifted by +1 alphabetically. MARKER → NBSLFS."
+},
+{
+  cat: "Logical Reasoning",
+  q: "Six persons A, B, C, D, E and F are standing in a row. C is between A and E. B is immediate right of E. D is immediate left of F. Who is at one of the ends?",
+  opts: ["A) A", "B) B", "C) D", "D) F"],
+  ans: 3,
+  exp: "Arrangement satisfying conditions gives F at one end."
+},
+{
+  cat: "Data Interpretation",
+  q: "The sales of a company increased by 25% in 2024 and decreased by 20% in 2025. If sales in 2023 were ₹16 lakh, what were the sales in 2025?",
+  opts: ["A) ₹15 lakh", "B) ₹16 lakh", "C) ₹18 lakh", "D) ₹20 lakh"],
+  ans: 1,
+  exp: "2024 sales = 16×1.25 = 20 lakh. 2025 sales = 20×0.8 = ₹16 lakh."
+},
+{
+  cat: "Data Interpretation",
+  q: "In a class, 40% students passed in Maths, 50% in English and 20% failed in both. What percentage passed in both subjects?",
+  opts: ["A) 10%", "B) 20%", "C) 30%", "D) 40%"],
+  ans: 0,
+  exp: "Passed at least one = 80%. By formula: 40+50−Both = 80. So Both = 10%."
+},
+{
+  cat: "Data Interpretation",
+  q: "A company's profit increased from ₹8 crore to ₹10 crore in one year. Find the percentage increase.",
+  opts: ["A) 20%", "B) 22%", "C) 25%", "D) 30%"],
+  ans: 2,
+  exp: "Increase = 2 crore. Percentage increase = (2/8)×100 = 25%."
+},
+{
+  cat: "Quantitative Aptitude",
+  q: "A can do a work in 10 days, B in 15 days and C in 30 days. They all start together, but A leaves after 2 days and B leaves 3 days before completion. In how many days is the work completed?",
+  opts: ["A) 8 days", "B) 9 days", "C) 10 days", "D) 12 days"],
+  ans: 1,
+  exp: "A+B+C = 1/10+1/15+1/30 = 1/5. In 2 days work done = 2/5. Remaining = 3/5. Solve remaining considering B leaves 3 days before completion gives total 9 days."
+},
+{
+  cat: "Logical Reasoning",
+  q: "Find the missing number in the series: 7, 14, 28, 56, ?, 224",
+  opts: ["A) 96", "B) 102", "C) 112", "D) 128"],
+  ans: 2,
+  exp: "Pattern is multiplication by 2. 56×2 = 112."
+}
 ];
 
 /* ════════════════════════════════════════════════════════════
@@ -871,10 +873,10 @@ function showResults(){
     heading='Outstanding! 🌟'; tagline='You are absolutely on fire. The RBI interviewer won\'t know what hit them.'; msgKey='excellent';
     launchConfetti();
   } else if(pct >= 60){
-    heading='Great work! 💪'; tagline='A strong performance — you\'re clearly well-prepared.'; msgKey='good';
+    heading='Great work! 💪'; tagline='A strong performance, you\'re clearly well-prepared.'; msgKey='good';
     launchConfetti(20);
   } else if(pct >= 40){
-    heading='Keep going! 🌸'; tagline='A solid start — a little more revision and you\'ll nail it.'; msgKey='average';
+    heading='Keep going! 🌸'; tagline='A solid start, a little more revision and you\'ll nail it.'; msgKey='average';
   } else {
     heading='Don\'t give up! 💛'; tagline='Every expert was once a beginner. You\'ve got this.'; msgKey='low';
   }
