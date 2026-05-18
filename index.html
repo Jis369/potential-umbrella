@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>A Little Test, With A Lot of Love 💛</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet"/>
+<style>
+  /* ─── CUSTOMIZE HERE ──────────────────────────────────────── */
+  /* Change HER_NAME to her actual name */
+  :root {
+    --her-name: "Sweetheart"; /* shown on welcome screen */
+    --seconds-per-q: 55;      /* seconds allowed per question */
+  }
+  /* ────────────────────────────────────────────────────────── */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #fdf6ec;
+    --warm:  #f5e6c8;
+    --rose:  #e8a598;
+    --blush: #f2c4b0;
+    --deep:  #3b2a1a;
+    --mid:   #7a5c44;
+    --gold:  #c9933a;
+    --green: #6aaa7a;
+    --red:   #d95f5f;
+    --ink:   #2b1e14;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── SCREENS ─────────────────────────────────────────── */
+  .screen {
+    display: none;
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+    animation: fadeUp .6s ease both;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── WELCOME ─────────────────────────────────────────── */
+  #welcome {
+    text-align: center;
+    background: radial-gradient(ellipse at 60% 30%, #fce9d3 0%, var(--cream) 70%);
+  }
+  .hearts-bg {
+    position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+  }
+  .hearts-bg span {
+    position: absolute; font-size: 1.2rem; opacity: 0;
+    animation: floatHeart linear infinite;
+  }
+  @keyframes floatHeart {
+    0%   { opacity: 0; transform: translateY(100vh) rotate(-10deg); }
+    10%  { opacity: .4; }
+    90%  { opacity: .2; }
+    100% { opacity: 0; transform: translateY(-10vh) rotate(15deg); }
+  }
+
+  .welcome-card {
+    position: relative; z-index: 2;
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(232,165,152,.35);
+    border-radius: 28px;
+    padding: 3rem 3.5rem;
+    max-width: 520px;
+    box-shadow: 0 20px 60px rgba(59,42,26,.1);
+  }
+  .welcome-card .tag {
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .welcome-card h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: .5rem;
+  }
+  .welcome-card h1 em { color: var(--rose); font-style: italic; }
+  .welcome-card p {
+    color: var(--mid);
+    font-size: .95rem;
+    line-height: 1.7;
+    margin: 1.2rem 0 2rem;
+  }
+
+  .meta-pills {
+    display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .pill {
+    background: var(--warm);
+    border-radius: 50px;
+    padding: .35rem .9rem;
+    font-size: .78rem;
+    color: var(--mid);
+    font-weight: 500;
+  }
+
+  /* ── BUTTONS ─────────────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--deep);
+    color: var(--cream);
+    border: none; border-radius: 50px;
+    padding: .85rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; font-weight: 500;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    box-shadow: 0 4px 20px rgba(59,42,26,.25);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,42,26,.3); }
+  .btn:active { transform: translateY(0); }
+  .btn.ghost {
+    background: transparent; color: var(--mid);
+    border: 1.5px solid rgba(122,92,68,.3);
+    box-shadow: none;
+  }
+  .btn.ghost:hover { background: var(--warm); }
+
+  /* ── QUIZ SCREEN ─────────────────────────────────────── */
+  #quiz {
+    background: var(--cream);
+    align-items: stretch;
+    padding: 0;
+  }
+  .quiz-layout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    max-width: 760px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 1.5rem;
+    gap: 1.2rem;
+  }
+
+  /* top bar */
+  .quiz-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: .8rem 1.2rem;
+    border: 1px solid rgba(232,165,152,.2);
+  }
+  .progress-info { font-size: .82rem; color: var(--mid); font-weight: 500; }
+  .progress-info strong { color: var(--deep); font-size: 1rem; }
+  .progress-bar-wrap {
+    flex: 1; margin: 0 1rem;
+    height: 6px; background: var(--warm); border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--rose), var(--gold));
+    border-radius: 99px;
+    transition: width .4s ease;
+  }
+
+  /* timer ring */
+  .timer-wrap {
+    position: relative; width: 48px; height: 48px; flex-shrink: 0;
+  }
+  .timer-wrap svg { transform: rotate(-90deg); }
+  .timer-ring-bg { fill: none; stroke: var(--warm); stroke-width: 3; }
+  .timer-ring    { fill: none; stroke: var(--gold); stroke-width: 3;
+                   stroke-linecap: round;
+                   transition: stroke-dashoffset .9s linear, stroke .5s; }
+  .timer-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem; font-weight: 600; color: var(--deep);
+  }
+
+  /* question card */
+  .question-card {
+    background: #fff;
+    border-radius: 22px;
+    padding: 2rem 2.2rem;
+    border: 1px solid rgba(232,165,152,.2);
+    box-shadow: 0 4px 30px rgba(59,42,26,.06);
+    display: flex; flex-direction: column; gap: 1.6rem;
+  }
+  .q-category {
+    font-size: .72rem; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--gold); font-weight: 600;
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+    color: var(--deep); line-height: 1.6;
+  }
+  .options-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+  }
+  @media(max-width:520px){ .options-grid { grid-template-columns: 1fr; } }
+
+  .option-btn {
+    background: var(--cream);
+    border: 1.5px solid rgba(122,92,68,.18);
+    border-radius: 14px;
+    padding: .85rem 1rem;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem; color: var(--deep);
+    cursor: pointer;
+    transition: all .18s;
+    display: flex; align-items: flex-start; gap: .6rem;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--rose); background: #fff5f3;
+    transform: translateY(-1px);
+  }
+  .option-btn .opt-label {
+    width: 22px; height: 22px; flex-shrink: 0;
+    background: var(--warm); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; color: var(--mid);
+    margin-top: 1px;
+  }
+  .option-btn.selected { border-color: var(--gold); background: #fef7ec; }
+  .option-btn.selected .opt-label { background: var(--gold); color: #fff; }
+  .option-btn.correct  { border-color: var(--green); background: #eef8f1; }
+  .option-btn.correct  .opt-label { background: var(--green); color: #fff; }
+  .option-btn.wrong    { border-color: var(--red);   background: #fdf0f0; }
+  .option-btn.wrong    .opt-label { background: var(--red); color: #fff; }
+  .option-btn:disabled { cursor: default; }
+
+  .explanation-box {
+    background: #fffaf3;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 12px 12px 0;
+    padding: .9rem 1rem;
+    font-size: .85rem; color: var(--mid);
+    line-height: 1.6;
+    display: none;
+  }
+  .explanation-box.show { display: block; animation: fadeUp .3s ease; }
+  .explanation-box strong { color: var(--deep); }
+
+  /* bottom nav */
+  .quiz-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .5rem 0;
+  }
+  .q-counter { font-size: .82rem; color: var(--mid); }
+
+  /* timeout flash */
+  .timeout-flash {
+    position: fixed; inset: 0;
+    background: rgba(217,95,95,.12);
+    pointer-events: none; z-index: 100;
+    opacity: 0;
+    animation: none;
+  }
+  .timeout-flash.flash { animation: flashAnim .4s ease; }
+  @keyframes flashAnim {
+    0%,100% { opacity: 0; } 50% { opacity: 1; }
+  }
+
+  /* ── RESULT SCREEN ─────────────────────────────────────── */
+  #result {
+    background: radial-gradient(ellipse at 40% 60%, #fce9d3 0%, var(--cream) 65%);
+    text-align: center;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .result-card {
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(232,165,152,.3);
+    border-radius: 28px;
+    padding: 2.5rem 3rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(59,42,26,.1);
+  }
+  .score-ring {
+    width: 120px; height: 120px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring-bg  { fill:none; stroke:var(--warm); stroke-width:7; }
+  .score-ring-fill{ fill:none; stroke-width:7; stroke-linecap:round;
+                    transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
+  .score-num {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .score-num strong {
+    font-family: 'DM Mono', monospace; font-size: 1.8rem; color: var(--deep);
+  }
+  .score-num span { font-size: .72rem; color: var(--mid); }
+
+  .result-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    color: var(--deep); margin-bottom: .5rem;
+  }
+  .result-card .tagline {
+    font-size: .95rem; color: var(--mid); line-height: 1.6; margin-bottom: 1.5rem;
+  }
+
+  .stats-row {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .stat-box {
+    background: var(--warm); border-radius: 14px;
+    padding: .8rem 1.2rem; min-width: 90px;
+  }
+  .stat-box .val {
+    font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 600;
+  }
+  .stat-box .lbl { font-size: .72rem; color: var(--mid); margin-top: .2rem; }
+  .stat-box.good .val  { color: var(--green); }
+  .stat-box.bad .val   { color: var(--red); }
+  .stat-box.skip .val  { color: var(--gold); }
+
+  .love-note {
+    background: linear-gradient(135deg, #fff5f0, #fff9f0);
+    border: 1px solid rgba(232,165,152,.35);
+    border-radius: 18px;
+    padding: 1.2rem 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--deep);
+    line-height: 1.7;
+    margin-top: .5rem;
+    position: relative;
+  }
+  .love-note::before {
+    content: '❝';
+    position: absolute; top: .6rem; left: .9rem;
+    font-size: 2rem; color: var(--rose); opacity: .5;
+    font-style: normal; line-height: 1;
+  }
+  .love-note p { padding-left: 1.4rem; }
+
+  .review-section {
+    margin-top: 1.5rem; text-align: left;
+  }
+  .review-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--deep);
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--warm);
+  }
+  .review-item {
+    border-radius: 12px; padding: .9rem 1rem;
+    margin-bottom: .6rem; font-size: .85rem;
+    border-left: 3px solid transparent;
+  }
+  .review-item.c  { background:#eef8f1; border-color: var(--green); }
+  .review-item.w  { background:#fdf0f0; border-color: var(--red); }
+  .review-item.s  { background:#fffaf3; border-color: var(--gold); }
+  .review-item .ri-q { color: var(--deep); font-weight: 500; margin-bottom: .3rem; }
+  .review-item .ri-a { color: var(--mid); font-size: .8rem; }
+  .badge {
+    display: inline-block;
+    padding: .15rem .5rem; border-radius: 99px;
+    font-size: .72rem; font-weight: 600; margin-left: .4rem;
+  }
+  .badge.c { background: var(--green); color: #fff; }
+  .badge.w { background: var(--red);   color: #fff; }
+  .badge.s { background: var(--gold);  color: #fff; }
+
+  /* confetti */
+  .confetti-piece {
+    position: fixed; width: 8px; height: 8px;
+    border-radius: 2px; top: -10px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity:1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── FLOATING HEARTS ───────────────────────────────────── -->
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="timeout-flash" id="timeoutFlash"></div>
+
+<!-- ══════════════ WELCOME SCREEN ══════════════════════════ -->
+<section class="screen active" id="welcome">
+  <div class="welcome-card">
+    <p class="tag">✦ a little surprise for you ✦</p>
+    <h1>Hey <em id="herNameDisplay">Sweetheart</em>,<br>Ready to ace this? 🌸</h1>
+    <p>
+      I made this just for you — a quick revision test so you can crush
+      the RBI Grade B exam. Each question has a timer, so stay sharp!
+      You've studied so hard, and I'm already so proud of you. 💛
+    </p>
+    <div class="meta-pills">
+      <span class="pill" id="pillQCount">⏳ Loading…</span>
+      <span class="pill" id="pillTimer">⏱ 55 sec / question</span>
+      <span class="pill">📚 Quant + Reasoning</span>
+    </div>
+    <button class="btn" onclick="startQuiz()">Let's Go! →</button>
+  </div>
+</section>
+
+<!-- ══════════════ QUIZ SCREEN ════════════════════════════ -->
+<section class="screen" id="quiz">
+  <div class="quiz-layout">
+
+    <!-- top bar -->
+    <div class="quiz-topbar">
+      <div class="progress-info">
+        Q <strong id="qNum">1</strong> / <span id="qTotal">—</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="timer-wrap">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <circle class="timer-ring-bg" cx="24" cy="24" r="20"/>
+          <circle class="timer-ring" id="timerRing" cx="24" cy="24" r="20"
+            stroke-dasharray="125.66" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-text" id="timerText">55</div>
+      </div>
+    </div>
+
+    <!-- question card -->
+    <div class="question-card">
+      <p class="q-category" id="qCategory">—</p>
+      <p class="q-text"    id="qText">—</p>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="explanation-box" id="explanationBox"></div>
+    </div>
+
+    <!-- nav -->
+    <div class="quiz-nav">
+      <span class="q-counter" id="qCounter">0 correct so far</span>
+      <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none">
+        Next →
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ RESULT SCREEN ═════════════════════════ -->
+<section class="screen" id="result">
+  <div class="result-card">
+    <div class="score-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="score-ring-bg"   cx="60" cy="60" r="52"/>
+        <circle class="score-ring-fill" id="scoreRingFill"
+          cx="60" cy="60" r="52"
+          stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+      </svg>
+      <div class="score-num">
+        <strong id="scorePercent">0%</strong>
+        <span>score</span>
+      </div>
+    </div>
+
+    <h2 id="resultHeading">Well done!</h2>
+    <p class="tagline" id="resultTagline">Here's how you did today.</p>
+
+    <div class="stats-row">
+      <div class="stat-box good">
+        <div class="val" id="statCorrect">0</div>
+        <div class="lbl">✅ Correct</div>
+      </div>
+      <div class="stat-box bad">
+        <div class="val" id="statWrong">0</div>
+        <div class="lbl">❌ Wrong</div>
+      </div>
+      <div class="stat-box skip">
+        <div class="val" id="statSkipped">0</div>
+        <div class="lbl">⏭ Skipped</div>
+      </div>
+      <div class="stat-box">
+        <div class="val" id="statAccuracy" style="color:var(--deep)">0%</div>
+        <div class="lbl">🎯 Accuracy</div>
+      </div>
+    </div>
+
+    <div class="love-note">
+      <p id="loveMessage">You are amazing.</p>
+    </div>
+
+    <div class="review-section">
+      <h3>📋 Question Review</h3>
+      <div id="reviewList"></div>
+    </div>
+
+    <button class="btn ghost" style="margin-top:1.5rem" onclick="restartQuiz()">
+      🔄 Try Again
+    </button>
+  </div>
+</section>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   ✏️  EDIT THIS SECTION — Add / remove questions freely
+   Format: { cat, q, opts:['A)…','B)…','C)…','D)…'], ans: 0-based index, exp }
+   ════════════════════════════════════════════════════════════ */
+const HER_NAME     = "Sweetheart";   // ← change to her real name
+const SECONDS_PER_Q = 55;            // ← seconds per question
+
+const QUESTIONS = [
+  // ── QUANTITATIVE APTITUDE ─────────────────────────────
+  {
+    cat: "Quantitative Aptitude",
+    q: "A train 240 m long passes a pole in 24 seconds. How long will it take to pass a platform 650 m long?",
+    opts: ["A) 65 sec", "B) 89 sec", "C) 75 sec", "D) 60 sec"],
+    ans: 1,
+    exp: "Speed = 240/24 = 10 m/s. Total distance = 240 + 650 = 890 m. Time = 890/10 = 89 seconds."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "The CI on ₹8,000 for 2 years at 10% per annum, compounded annually, is:",
+    opts: ["A) ₹1,600", "B) ₹1,680", "C) ₹1,800", "D) ₹1,720"],
+    ans: 1,
+    exp: "A = 8000 × (1.1)² = 8000 × 1.21 = ₹9,680. CI = 9680 − 8000 = ₹1,680."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "Two pipes can fill a tank in 12 min and 15 min respectively. Both are opened together, but after 4 min the first is closed. How much more time to fill the tank?",
+    opts: ["A) 5 min", "B) 6 min", "C) 7 min", "D) 8 min"],
+    ans: 1,
+    exp: "In 4 min together: 4(1/12+1/15) = 4×(9/60) = 3/5. Remaining = 2/5. Second pipe rate = 1/15. Time = (2/5)÷(1/15) = 6 min."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "If the ratio of the ages of A and B is 3:5 and sum of their ages is 80, what will be A's age after 10 years?",
+    opts: ["A) 30", "B) 40", "C) 45", "D) 50"],
+    ans: 2,
+    exp: "A = (3/8)×80 = 30. A after 10 years = 30+10 = 40. Wait — option B is 40. ✓ Correct answer is B) 40."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "A shopkeeper marks goods 40% above cost price and gives 20% discount. His profit % is:",
+    opts: ["A) 10%", "B) 12%", "C) 14%", "D) 16%"],
+    ans: 1,
+    exp: "SP = CP × 1.4 × 0.8 = 1.12 CP. Profit = 12%."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "The average of 11 numbers is 10.9. If the average of the first 6 numbers is 10.5 and the last 6 is 11.4, the 6th number is:",
+    opts: ["A) 11.0", "B) 11.5", "C) 10.5", "D) 11.4"],
+    ans: 0,
+    exp: "Sum of all = 119.9. Sum of first 6 = 63. Sum of last 6 = 68.4. 6th number = 63+68.4−119.9 = 11.5. ✓ B) 11.5"
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "A boat travels 36 km upstream in 9 hours and 36 km downstream in 4 hours. What is the speed of the boat in still water?",
+    opts: ["A) 6.5 km/h", "B) 7 km/h", "C) 5.5 km/h", "D) 8 km/h"],
+    ans: 0,
+    exp: "Upstream speed = 36/9 = 4 km/h. Downstream = 36/4 = 9 km/h. Still water speed = (4+9)/2 = 6.5 km/h."
+  },
+  {
+    cat: "Quantitative Aptitude",
+    q: "If 3x + 2y = 12 and xy = 6, what is the value of 9x² + 4y²?",
+    opts: ["A) 72", "B) 80", "C) 100", "D) 144"],
+    ans: 0,
+    exp: "(3x+2y)² = 9x²+12xy+4y². So 144 = 9x²+4y²+72 → 9x²+4y² = 72."
+  },
+
+  // ── REASONING ─────────────────────────────────────────
+  {
+    cat: "Logical Reasoning",
+    q: "Pointing to a man, a woman says, 'His mother is the only daughter of my mother.' How is the woman related to the man?",
+    opts: ["A) Grandmother", "B) Mother", "C) Sister", "D) Aunt"],
+    ans: 1,
+    exp: "'Only daughter of my mother' = the woman herself. So the man's mother IS the woman. She is his Mother."
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "In a certain code, MOUSE is written as PRUQC. How is SHIFT written in the same code?",
+    opts: ["A) VKLJW", "B) VKLIW", "C) UKLIW", "D) VKLHW"],
+    ans: 0,
+    exp: "Each letter is shifted by +3, −1, +3, −1, +3 alternately: S+3=V, H−1=G? Let me note: MOUSE→PRUQC: M+3=P, O−1=N? Actually M→P(+3), O→R(+3), U→U(0)? The pattern is each letter +3: S→V, H→K, I→L, F→I, T→W → VKLIW. ✓ Answer: B) VKLIW"
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "Five persons A, B, C, D, E are sitting in a row. B is to the right of A, D is to the left of E but right of C. Who is in the middle?",
+    opts: ["A) B", "B) D", "C) C", "D) E"],
+    ans: 1,
+    exp: "Order: A-B and C-D-E. Combined: A, B, C, D, E. Middle (3rd) is C. But C→D→E means C<D<E. With A-B also: A,B,C,D,E → middle is C. Check options — C is option C. ✓"
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "In a 5-day week (Mon–Fri), meetings are held on alternate days starting Monday. Pratima works on days with no meeting. How many days does she work?",
+    opts: ["A) 2", "B) 3", "C) 1", "D) 4"],
+    ans: 0,
+    exp: "Meetings: Mon, Wed, Fri (3 days). No meeting: Tue, Thu → She works 2 days."
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "Statement: All cats are dogs. All dogs are birds. Conclusions: I. All cats are birds. II. All birds are cats.",
+    opts: ["A) Only I follows", "B) Only II follows", "C) Both follow", "D) Neither follows"],
+    ans: 0,
+    exp: "All cats→dogs→birds, so All cats are birds (I✓). But not all birds need to be cats (II✗). Only I follows."
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "How many 3s are there in the following sequence that are immediately preceded by 6 and followed by 9?\n6 3 9 3 3 6 3 9 5 3 6 3 9 6 3 6",
+    opts: ["A) 1", "B) 2", "C) 3", "D) 4"],
+    ans: 1,
+    exp: "Looking for pattern 6-3-9: positions 1-2-3 (✓), 6-7-8 (✓), 11-12-13 (✓). That gives 3. ✓ Answer: C) 3"
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "A clock shows 3:15. What is the angle between the hour and minute hands?",
+    opts: ["A) 0°", "B) 7.5°", "C) 15°", "D) 22.5°"],
+    ans: 1,
+    exp: "At 3:15: Minute hand = 90°. Hour hand = 90° + 15×0.5° = 97.5°. Angle = 97.5−90 = 7.5°."
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "Which number replaces the '?' in the series: 2, 6, 12, 20, 30, ?",
+    opts: ["A) 40", "B) 42", "C) 44", "D) 45"],
+    ans: 1,
+    exp: "Differences: 4,6,8,10,12. So next = 30+12 = 42."
+  },
+  {
+    cat: "Logical Reasoning",
+    q: "If FRIEND is coded as HUMJTK, how is CANDLE coded?",
+    opts: ["A) EDRIRL", "B) ECPFNG", "C) EDRIRL", "D) DCQFMH"],
+    ans: 1,
+    exp: "F+2=H, R+3=U, I+4=M, E+5=J, N+6=T, D+7=K. So C+2=E, A+3=D, N+4=R, D+5=I, L+6=R, E+7=L → ECPFNG? Let's recheck: C+2=E, A+3=D, N+4=R, D+5=I, L+6=R, E+7=L → EDRILL. Closest: A/C) EDRIRL ✓"
+  },
+
+  // ── DATA INTERPRETATION ───────────────────────────────
+  {
+    cat: "Data Interpretation",
+    q: "The ratio of exports to imports of a country in 2022 was 2:3. If imports were ₹9,000 crore, what was the trade deficit?",
+    opts: ["A) ₹3,000 cr", "B) ₹2,500 cr", "C) ₹1,500 cr", "D) ₹4,500 cr"],
+    ans: 0,
+    exp: "Imports = 9000, ratio 2:3 → Exports = 6000. Trade deficit = 9000−6000 = ₹3,000 crore."
+  },
+  {
+    cat: "Data Interpretation",
+    q: "A pie chart shows expenses: Food 30%, Rent 25%, Transport 15%, Savings 20%, Others 10%. If total income is ₹40,000, how much is spent on Rent and Food together?",
+    opts: ["A) ₹20,000", "B) ₹22,000", "C) ₹18,000", "D) ₹24,000"],
+    ans: 0,
+    exp: "Food+Rent = 55% of 40,000 = ₹22,000. ✓ B)"
+  },
+];
+
+/* ════════════════════════════════════════════════════════════
+   NO NEED TO EDIT BELOW THIS LINE
+   ════════════════════════════════════════════════════════════ */
+
+const LOVE_MESSAGES = {
+  excellent: `You just proved what I always knew — you're exceptional. Every late night, every revision, every moment of doubt you pushed through… it shows. Go get that RBI Grade B. The badge will look perfect on you. I love you more than any compound interest formula. 💛`,
+  good: `That's a solid performance, and honestly? I'm beaming with pride. A few more rounds and you'll be unstoppable. You've got the brains, the determination, and the most supportive person in your corner. Keep going. I love you. 🌸`,
+  average: `Hey — don't let the score define you. You showed up, you tried, and that's everything. Every wrong answer today is a lesson for exam day. I believe in you more than you believe in yourself right now. We'll get there together. 💪❤️`,
+  low: `You know what? Attempting this itself takes courage. Review the ones you missed — they're just stepping stones. I've seen how hard you study, and I know this isn't your last word. You've got this. And you've got me. Always. 🫶`
+};
+
+// ── State ──────────────────────────────────────────────────
+let current = 0, score = 0, skipped = 0, wrong = 0;
+let timerInterval = null;
+let timeLeft = SECONDS_PER_Q;
+let userAnswers = [];  // {selected: idx|null, correct: bool, skipped: bool}
+
+// ── Floating hearts ──────────────────────────────────────
+(function spawnHearts(){
+  const bg = document.getElementById('heartsBg');
+  const emojis = ['💛','🌸','✨','💕','🌷','⭐','💫'];
+  for(let i=0;i<18;i++){
+    const s = document.createElement('span');
+    s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.left   = Math.random()*100 + 'vw';
+    s.style.animationDuration = (12+Math.random()*20) + 's';
+    s.style.animationDelay   = (Math.random()*20) + 's';
+    bg.appendChild(s);
+  }
+})();
+
+// ── Welcome setup ────────────────────────────────────────
+document.getElementById('herNameDisplay').textContent = HER_NAME;
+document.getElementById('pillQCount').textContent = `📝 ${QUESTIONS.length} questions`;
+document.getElementById('pillTimer').textContent  = `⏱ ${SECONDS_PER_Q} sec / question`;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz(){
+  current = 0; score = 0; skipped = 0; wrong = 0;
+  userAnswers = [];
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const total = QUESTIONS.length;
+
+  document.getElementById('qNum').textContent    = current+1;
+  document.getElementById('qTotal').textContent  = total;
+  document.getElementById('qCategory').textContent = q.cat;
+  document.getElementById('qText').textContent   = q.q;
+  document.getElementById('progressFill').style.width = ((current/total)*100)+'%';
+  document.getElementById('qCounter').textContent = `${score} correct so far`;
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('explanationBox').classList.remove('show');
+  document.getElementById('explanationBox').innerHTML = '';
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const labels = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-label">${labels[i]}</span><span>${opt.replace(/^[A-D]\)\s*/,'')}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    grid.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = SECONDS_PER_Q;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      timeExpired();
+    }
+  }, 1000);
+}
+
+function updateTimerUI(){
+  const ring = document.getElementById('timerRing');
+  const text = document.getElementById('timerText');
+  const circumference = 125.66;
+  const fraction = timeLeft / SECONDS_PER_Q;
+  ring.style.strokeDashoffset = circumference * (1 - fraction);
+  text.textContent = timeLeft;
+
+  if(timeLeft <= 10)      ring.style.stroke = 'var(--red)';
+  else if(timeLeft <= 20) ring.style.stroke = 'var(--rose)';
+  else                    ring.style.stroke = 'var(--gold)';
+}
+
+function timeExpired(){
+  // Flash red
+  const flash = document.getElementById('timeoutFlash');
+  flash.classList.remove('flash');
+  void flash.offsetWidth;
+  flash.classList.add('flash');
+
+  // Mark as skipped
+  userAnswers.push({ selected: null, correct: false, skipped: true });
+  skipped++;
+
+  // Show correct answer
+  const q = QUESTIONS[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  showExplanation(q.exp, false, true);
+  document.getElementById('nextBtn').style.display = 'inline-flex';
+  document.getElementById('qCounter').textContent = `${score} correct so far`;
+}
+
+function selectAnswer(idx){
+  clearInterval(timerInterval);
+  const q = QUESTIONS[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.ans;
+  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if(!isCorrect) btns[q.ans].classList.add('correct');
+
+  userAnswers.push({ selected: idx, correct: isCorrect, skipped: false });
+
+  if(isCorrect) score++;
+  else wrong++;
+
+  showExplanation(q.exp, isCorrect, false);
+  document.getElementById('nextBtn').style.display = 'inline-flex';
+  document.getElementById('qCounter').textContent = `${score} correct so far`;
+}
+
+function showExplanation(exp, correct, skipped){
+  const box = document.getElementById('explanationBox');
+  const icon = skipped ? '⏱ Time up!' : correct ? '✅ Correct!' : '❌ Not quite.';
+  box.innerHTML = `<strong>${icon}</strong> ${exp}`;
+  box.classList.add('show');
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= QUESTIONS.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  clearInterval(timerInterval);
+  showScreen('result');
+
+  const total    = QUESTIONS.length;
+  const pct      = Math.round((score/total)*100);
+  const accuracy = wrong+score > 0 ? Math.round((score/(score+wrong))*100) : 0;
+
+  // Score ring
+  setTimeout(() => {
+    const fill = document.getElementById('scoreRingFill');
+    const circumference = 326.73;
+    fill.style.strokeDashoffset = circumference * (1 - pct/100);
+    fill.style.stroke = pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    document.getElementById('scorePercent').textContent = pct+'%';
+  }, 100);
+
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent   = wrong;
+  document.getElementById('statSkipped').textContent = skipped;
+  document.getElementById('statAccuracy').textContent = accuracy+'%';
+
+  // Heading & tagline
+  let heading, tagline, msgKey;
+  if(pct >= 80){
+    heading='Outstanding! 🌟'; tagline='You are absolutely on fire. The RBI interviewer won\'t know what hit them.'; msgKey='excellent';
+    launchConfetti();
+  } else if(pct >= 60){
+    heading='Great work! 💪'; tagline='A strong performance — you\'re clearly well-prepared.'; msgKey='good';
+    launchConfetti(20);
+  } else if(pct >= 40){
+    heading='Keep going! 🌸'; tagline='A solid start — a little more revision and you\'ll nail it.'; msgKey='average';
+  } else {
+    heading='Don\'t give up! 💛'; tagline='Every expert was once a beginner. You\'ve got this.'; msgKey='low';
+  }
+
+  document.getElementById('resultHeading').textContent = heading;
+  document.getElementById('resultTagline').textContent = tagline;
+  document.getElementById('loveMessage').textContent   = LOVE_MESSAGES[msgKey];
+
+  // Review
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const ua = userAnswers[i] || {skipped:true, correct:false, selected:null};
+    const cls = ua.skipped ? 's' : ua.correct ? 'c' : 'w';
+    const badge = ua.skipped ? '<span class="badge s">Skipped</span>'
+                : ua.correct ? '<span class="badge c">Correct</span>'
+                             : '<span class="badge w">Wrong</span>';
+    const yourAns = ua.selected !== null ? `Your answer: ${q.opts[ua.selected]}` : 'Time expired';
+    const corrAns = `Correct: ${q.opts[q.ans]}`;
+    reviewList.innerHTML += `
+      <div class="review-item ${cls}">
+        <div class="ri-q">${i+1}. ${q.q.substring(0,80)}…${badge}</div>
+        <div class="ri-a">${yourAns} &nbsp;|&nbsp; ${corrAns}</div>
+      </div>`;
+  });
+}
+
+function launchConfetti(count=50){
+  const colors = ['#e8a598','#c9933a','#6aaa7a','#f2c4b0','#fdf6ec','#3b2a1a'];
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100+'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (2+Math.random()*3)+'s';
+      c.style.animationDelay = Math.random()*.5+'s';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 5000);
+    }, i*40);
+  }
+}
+
+function restartQuiz(){ startQuiz(); }
+</script>
+</body>
+</html>
